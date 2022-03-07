@@ -1,0 +1,5 @@
+github.com/gonutz/check v1.2.0/go.mod h1:J5ndBcNQd4fv3I+Moevk4PXZoyXRamwwclm6dDgAuyA=
+github.com/gonutz/w32/v2 v2.2.2 h1:y6Y337TpuCXjYdFTq5p5NmcujEdAQiTB43kisovMk+0=
+github.com/gonutz/w32/v2 v2.2.2/go.mod h1:MgtHx0AScDVNKyB+kjyPder4xIi3XAcHS6LDDU2DmdE=
+github.com/gonutz/wui/v2 v2.7.3 h1:AXRJAgFJu9rR8toFPHQ8Vg3+golFU7uX43XVpKEpBfA=
+github.com/gonutz/wui/v2 v2.7.3/go.mod h1:4twV9Ka+OwAr7Fy12YSJuAy5e4u8uTHk4YbxFyguheo=

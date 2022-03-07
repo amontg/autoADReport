@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/gonutz/wui/v2"
 )
 
 /*
@@ -34,10 +36,21 @@ func main() {
 		4. Append Row structs into CSV.Row
 
 		https://gosamples.dev/read-csv/
+
+		Ideas to improve:
+		wrap os.File in bufio.Reader
+		wrap file handle in 20kb buffer
 	*/
 
-	// open file
-	f, err := os.Open("C:/Users/amontgomery/OneDrive - rams.nfl.com/3_1TO.csv")
+	// create dialogs and windows
+	fileOpenDialog := wui.NewFileOpenDialog()
+	window := wui.NewWindow()
+
+	// first grab the old file path
+	window.SetTitle("Choose the previous month's report: ")
+	_, oldFilePath := fileOpenDialog.ExecuteSingleSelection(window)
+	fmt.Println(oldFilePath)
+	f, err := os.Open(oldFilePath)
 	if err != nil {
 		fmt.Print(err)
 	}
