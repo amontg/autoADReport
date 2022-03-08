@@ -1,4 +1,15 @@
 # autoADReport
- For LA Rams: automate the AD monthly report
-
-This package will take two CSV (context: old AD report and new AD report) files and create a slice filled with differences in the new AD report.
+ Author & Owner: Amir Montgomery
+ 
+ Created: 3/7/2022
+ 
+ Objective: This package will take two .csv files and create a slice filled with differences between the two.
+ 
+ [Why?] 
+ 
+ Every month, I have to audit my company's list of user machines. It is a repetitive, basic data analysis task. This solution automates that task.
+ 
+ [In Progress] 
+ 
+ - Compare parsed .csv files
+ - Output something to show the differences between files
