@@ -46,11 +46,27 @@ func main() {
 	fileOpenDialog := wui.NewFileOpenDialog()
 	window := wui.NewWindow()
 
-	// first grab the old file path
-	window.SetTitle("Choose the previous month's report: ")
-	_, oldFilePath := fileOpenDialog.ExecuteSingleSelection(window)
-	fmt.Println(oldFilePath)
-	f, err := os.Open(oldFilePath)
+	// first grab the file paths
+	var sliceFilePaths []string
+
+	for len(sliceFilePaths) != 2 {
+		_, sliceFilePaths = fileOpenDialog.ExecuteMultiSelection(window) // returns []string
+
+		// if the box wasn't cancelled lmfao then check this
+		if len(sliceFilePaths) != 2 {
+			wui.MessageBoxError("Max Files: 2", "This application wil only take 2 files. Please try again.")
+
+		}
+	}
+
+	fileOne := createNewCSVStruct(sliceFilePaths[0])
+	//fileTwo := createNewCSVStruct(sliceFilePaths[1])
+
+	fmt.Print(fileOne)
+}
+
+func createNewCSVStruct(file string) *CSV {
+	f, err := os.Open(file)
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -71,6 +87,7 @@ func main() {
 		}
 		if err != nil {
 			fmt.Println(err)
+			break
 		}
 
 		// rec == [ADsPath sAMAccountName displayName mail]
@@ -83,8 +100,7 @@ func main() {
 		tempRow.Index = i
 
 		fullFile.Row = append(fullFile.Row, *tempRow)
-		i++
 	}
 
-	fmt.Print(fullFile)
+	return fullFile
 }
