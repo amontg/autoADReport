@@ -14,17 +14,13 @@ import (
 	Date: 3/7/2022
 	Obj: Read two CSVs and create a slice with all of the differences and line number
 */
-
 type Row struct {
-	LDAP        string
-	SAM         string
-	DisplayName string
-	Mail        string
-	Index       int
+	ID    string
+	Index int
 }
 
 type CSV struct {
-	Row []Row
+	Rows []Row // slice of rows
 }
 
 func main() {
@@ -46,24 +42,63 @@ func main() {
 	fileOpenDialog := wui.NewFileOpenDialog()
 	window := wui.NewWindow()
 
-	// first grab the file paths
+	killMe := false
+	window.SetOnClose(func() {
+
+		killMe = true
+		os.Exit(1)
+	})
+
 	var sliceFilePaths []string
 
 	for len(sliceFilePaths) != 2 {
 		_, sliceFilePaths = fileOpenDialog.ExecuteMultiSelection(window) // returns []string
 
 		// if the box wasn't cancelled lmfao then check this
-		if len(sliceFilePaths) != 2 {
-			wui.MessageBoxError("Max Files: 2", "This application wil only take 2 files. Please try again.")
-
+		if killMe == true {
+			break
+		} else {
+			if len(sliceFilePaths) != 2 {
+				fmt.Println(killMe)
+				wui.MessageBoxError("Error", "This application wil only take 2 files. Please try again.")
+			}
 		}
 	}
 
 	fileOne := createNewCSVStruct(sliceFilePaths[0])
-	//fileTwo := createNewCSVStruct(sliceFilePaths[1])
+	fileTwo := createNewCSVStruct(sliceFilePaths[1])
 
-	fmt.Print(fileOne)
+	difference(fileOne, fileTwo)
 }
+
+// difference returns the elements in `a` that aren't in `b`.
+func difference(a, b *CSV) []string {
+	mb := make(map[string]struct{}, len(b.Rows))
+	for _, x := range b.Rows {
+		mb[x.ID] = struct{}{}
+	}
+	var diff []string
+	for _, x := range a.Rows {
+		if _, found := mb[x.ID]; !found {
+			tstring := fmt.Sprintf("Row %d: (%s)", x.Index, x.ID)
+			diff = append(diff, tstring)
+			//fmt.Println(x.ID)
+			fmt.Println(tstring)
+		}
+	}
+	return diff
+}
+
+/*
+	[Map Notes] https://gobyexample.com/maps
+
+	make(map[key type]value type)
+
+	var file *CSV = { *Row, *Row, *Row }
+	var file[x] *Row = [ID, Index]
+	file[x].ID == string
+	file[x].Index == int
+*/
 
 func createNewCSVStruct(file string) *CSV {
 	f, err := os.Open(file)
@@ -75,14 +110,14 @@ func createNewCSVStruct(file string) *CSV {
 	defer f.Close()
 
 	var fullFile *CSV = new(CSV)
-	i := 0
+	i := 1
 	var tempRow *Row = new(Row)
 
 	csvReader := csv.NewReader(f)
 	for {
 		rec, err := csvReader.Read()
 		if err == io.EOF {
-			fmt.Println("No more data.")
+			// fmt.Println("No more data.")
 			break
 		}
 		if err != nil {
@@ -93,13 +128,11 @@ func createNewCSVStruct(file string) *CSV {
 		// rec == [ADsPath sAMAccountName displayName mail]
 		// split into slice, fill out Row struct, append to fullFile.Row
 		//fmt.Println(rec)
-		tempRow.LDAP = rec[0]
-		tempRow.SAM = rec[1]
-		tempRow.DisplayName = rec[2]
-		tempRow.Mail = rec[3]
+		tempRow.ID = rec[0]
 		tempRow.Index = i
 
-		fullFile.Row = append(fullFile.Row, *tempRow)
+		fullFile.Rows = append(fullFile.Rows, *tempRow)
+		i++
 	}
 
 	return fullFile
