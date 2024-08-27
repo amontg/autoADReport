@@ -7,7 +7,7 @@
  
  [Why?] 
  
- Every month, I have to audit my company's list of user machines. It is a repetitive, basic data analysis task. This solution automates that task and gives the rows that are different in the new file.
+ Every month, I have to audit my company's list of user machines. It is a repetitive, basic data analysis task. This solution automates that task and gives the rows (which are names) that are different in the new file.
  
  [Deliverable]
  
